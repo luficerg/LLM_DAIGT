@@ -25,20 +25,20 @@ to generate their essays and academic works with LLM, so it becomes very importa
 A.I.-generated text so that people doing their original work can be acknowledged.
 
 ## The Science of Detecting LLM-Generated Texts 🔬
-I have used this research paper on the Detection of LLM-generated texts for this section.<br><br>
-• Existing detection methods can be roughly grouped into two categories: Black-box detection
-and White-box detection. In practice, black-box detectors are commonly constructed by individual developers, whereas LLM developers generally carry out white-box detection.<br><br>
-• Black-box detection methods are limited to API-level access to LLMs. They rely on collecting
-text samples from human and machine sources to train a classification model that can be
+I have used [this](https://arxiv.org/abs/2303.07205) research paper on the Detection of LLM-generated texts for this section.<br><br>
+• Existing detection methods can be roughly grouped into two categories: **Black-box detection**
+and **White-box detection**. In practice, black-box detectors are commonly constructed by individual developers, whereas LLM developers generally carry out white-box detection.<br><br>
+• Black-box detection methods are limited to **API-level** access to LLMs. They rely on collecting
+text samples from **human and machine sources** to train a classification model that can be
 used to discriminate between LLM- and human-generated texts.<br><br>
-• To develop a proficient detector, black-box approaches necessitate gathering text samples originating from both human and machine-generated sources. Subsequently, a classifier is then
+• To develop a proficient detector, black-box approaches necessitate gathering text samples originating from both human and machine-generated sources. Subsequently, **a classifier** is then
 designed to distinguish between the two categories by identifying and leveraging relevant features.<br><br>
 • As LLMs evolve and improve, black-box methods are becoming less effective. An alternative
-is White-box detection; in this scenario, the detector has full access to the LLMs and can
+is **White-box detection**; in this scenario, the detector has full access to the LLMs and can
 control the model’s generation behaviour for traceability purposes.<br><br>
-• For this project/task on Kaggle, we will use the Black-box method, as the dataset contains
+• For this project/task on Kaggle, we will use the **Black-box method**, as the dataset contains
 human and AI-generated text. Below, I have discussed what is the flow of work in the Black-box
-method from scratch without using the BERT pre-trained models.<br><br>
+method **from scratch** without using the BERT pre-trained models.<br><br>
 
 ## Patterns in Human and AI-generated text 🤯
 
@@ -56,9 +56,9 @@ LLMs typically lack emotional expressiveness and are neutral by default.<br><br>
 • It is important to note that LLMs can substantially alter their linguistic patterns in response to
 prompts. For instance, incorporating a prompt like ”Please respond with humour” can change
 the sentiment and style of the LLM’s response, impacting the robustness of linguistic patterns.
-During training, LLMs tend to depend on likelihood maximization objectives, which can create inconsistent or nonsensical text—a condition known as Hallucination. This highlights the importance of
-fact-checking as a critical component of detection. For example, it has been reported that OpenAI’s
-ChatGPT posts inaccurate news opinions and produces fake scientific abstracts.<br><br>
+During training, LLMs tend to depend on likelihood maximization objectives, which can create inconsistent or nonsensical text—a condition known as **Hallucination**. This highlights the importance of
+**fact-checking** as a critical component of detection. For example, it has been reported that OpenAI’s
+ChatGPT **posts inaccurate** news opinions and produces **fake scientific abstracts**.<br><br>
 
 ## Data 📊 
 
@@ -68,7 +68,7 @@ is highly skewed towards one label. The original dataset only contains 3 LLM-gen
 and 1375 human-generated samples.<br><br>
 • To tackle this problem, we have to use an external dataset. Thankfully, we don’t have to do this
 step on our own; many have uploaded datasets containing balanced labels. Here is the link to
-the dataset that I have used Dataset.<br><br>
+the dataset that I have used [Dataset](https://www.kaggle.com/datasets/dsluciano/daigt-one-place-all-data).<br><br>
 • Collecting data through human effort can be time-consuming and financially impractical for
 larger datasets. An alternative strategy involves extracting text directly from human-authored
 sources, such as websites and scholarly articles.<br><br>
@@ -77,9 +77,9 @@ sources, such as websites and scholarly articles.<br><br>
 ## Preprocessing 🫧
 
 • Preprocessing is a very important step to perform before training any model based on the NLP
-tasks, as preprocessing makes the text free from useless words, such as stopwords, punctuations, numeric digits, URLs, etc., that are present in the data, while the data collection and
+tasks, as preprocessing makes the text free from useless words, such as **stopwords, punctuations, numeric digits, URLs, etc.**, that are present in the data, while the data collection and
 can greatly affect the model’s performance.<br><br>
-• For the preprocessing part, I have used the SPACY library and NLTK for The stemming part,
+• For the preprocessing part, I have used the **SPACY library and NLTK** for The stemming part,
 as lemmatising from Spacy, takes a lot of time to compile. I removed the stopwords, digits,
 punctuations, and URLs from the raw text and then used the NLTK library to perform the
 Stemming.<br><br>
@@ -89,39 +89,39 @@ Stemming.<br><br>
 
 Unfortunately, Machine learning models can’t understand text, so we have To somehow convert
 the text to numbers to train a machine-learning model on it.<br><br>
-• We have various methods for this, such as Bag of Words, Tf-Idf, and N-grams. These
+• We have various methods for this, such as **Bag of Words, Tf-Idf, and N-grams**. These
 methods are based on the frequency of the word in the sentence, while word embedding, such
-as Word2Vec from the Gensim library, is based on deep learning techniques such as CBOW
-and Skip-gram, which use neural networks and create a vector-based representation for every
+as **Word2Vec from the Gensim** library, is based on deep learning techniques such as **CBOW
+and Skip-gram**, which use neural networks and create a vector-based representation for every
 word in the vocabulary.<br><br>
 • The Word2Vec-based techniques are very useful as they help identify the word vectors with
 proper context and perform best in NLP-related tasks.<br><br>
 • I have used every method for this project, and the Tf-Idf seems to perform better than the others.
-Also, I have used the Byte-Pair encoding from the hugging face library, along with the Tf-Idf
-vectorizer, which gave me the best ROC-AUC score.<br><br>
+Also, I have used the **Byte-Pair encoding from the hugging face library, along with the Tf-Idf
+vectorizer**, which gave me the **best ROC-AUC score**.<br><br>
 
 
 
 ## Model Building 🚧
 
-• For the model-building part, I have observed that the tree-based algorithms perform much
-better than the linear model in the case of NLP classification. Also, the Naive Bayes
-algorithms perform much better than the linear models.<br><br>
-• In the given notebook in my GitHub, I have used many different models and methods like
-cross-validation and GridSearchCV to tune the hyperparameters.<br><br>
-• Further, I have a separate notebook in which I have used a Bi-Directional LSTM for which the
+• For the model-building part, I have observed that the **tree-based algorithms** perform much
+better than the linear model in the case of **NLP classification**. Also, the **Naive Bayes
+algorithms** perform much better than the linear models.<br><br>
+• In the given notebook in my [GitHub](https://github.com/akshatshaw/LLM_DAIGT), I have used many different models and methods like
+**cross-validation and GridSearchCV** to tune the hyperparameters.<br><br>
+• Further, I have a separate notebook in which I have used a **Bi-Directional LSTM** for which the
 preprocessing step is the same, but the word embedding technique for the LSTM is implemented
 in the model-building step itself.<br><br>
-• However, the LSTM one does not perform better in this dataset. Finally, I used an ensemble
-model with models MultinomialNB, SGDClassifier, LGBMClassifier, and CatBoostClassifier.
-I would like to thank Zulqarnain Ali as I have used his Notebook to improve my score and learned
-about the Byte-Pair encoding and the model’s hyperparameters.<br><br>
+• **However, the LSTM one does not perform better in this dataset**. Finally, I used an ensemble
+model with models **MultinomialNB, SGDClassifier, LGBMClassifier, and CatBoostClassifier**.
+I would like to thank **Zulqarnain Ali** as I have used his [Notebook](https://www.kaggle.com/code/zulqarnainali/llm-ensemble-model-explained-resourced/notebook) to improve my score and learned
+about the **Byte-Pair** encoding and the model’s hyperparameters.<br><br>
 
 
 ## Results 🎉
 
-My final best score in this competition is 0.874. This competition has ROC-AUC as the scoring
-matrices i.e., the Area under the curve of the ROC curve.<br><br>
+My final best score in this competition is **0.874**. This competition has ROC-AUC as the scoring
+matrices i.e., the Area under the curve of the **ROC curve**.<br><br>
 • Also, one notable strange thing happening in this competition is that people have a very good
 CV score, but their leaderboard score is not as good as the CV, and I think that this is not due
 to the overfitting but it is due to the hidden test dataset which is a very different text compared
@@ -134,8 +134,8 @@ to human style, thus by training on this data can improve the performance.<br><b
 
 ## Conclusion 🤔
 
-In Conclusion, I found that in this competition, due to the hidden data, simpler methods like Tf-Idf
-and Word2Vec tend to perform much better as compared to the LSTM-based models since much of
+In Conclusion, I found that in this competition, due to the hidden data, simpler methods like **Tf-Idf
+and Word2Vec tend to perform much better as compared to the LSTM-based models** since much of
 the details of the writing style of Humans and AI are different in train and test datasets.
 
 
